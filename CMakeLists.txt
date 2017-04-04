@@ -499,7 +499,9 @@ if(${use_http})
         find_package_handle_standard_args(CURL DEFAULT_MSG CURL_LIBRARIES)
 
         include_directories(${CURL_INCLUDE_DIRS})
-        target_link_libraries(aziotsharedutil ${CURL_LIBRARIES})
+        if (NOT ${nucleus})
+            target_link_libraries(aziotsharedutil ${CURL_LIBRARIES})
+        endif()
     endif()
 endif()
 
@@ -521,7 +523,11 @@ if(${use_openssl})
 endif()
 
 if(${use_wolfssl})
-    target_link_libraries(aziotsharedutil wolfssl)
+    if (NOT ${nucleus})
+        target_link_libraries(aziotsharedutil wolfssl)
+    else()
+        target_link_libraries(aziotsharedutil nucleus m g c gcc stdc++)
+    endif()
 endif()
 
 if(${use_cyclonessl} AND WIN32)
